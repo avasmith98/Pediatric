@@ -39,7 +39,7 @@ class PubMedSearcher:
         database_query: str,
         llm_query: str,
         top_n: int = 25,
-        llm_model: str = "gpt-4",
+        llm_model: str = "gpt-4.1",
         *,
         save: bool = True,
         show: bool = True,
