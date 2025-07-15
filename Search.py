@@ -79,50 +79,49 @@ class PubMedSearcher:
         citations = {}
 
         for result in search_results:
-            if result.score > 0.5:
-                abstract = result.payload.get(
-                    "abstract", "No abstract available"
+            abstract = result.payload.get(
+                "abstract", "No abstract available"
+            )
+            title = result.payload.get("title", "Unknown Title")
+            authors = result.payload.get("authors", [])
+            pmid = result.payload.get("pmid", "No PMID")
+
+            # Extract year safely from journal
+            journal_info = result.payload.get("journal", {})
+            pub_date = journal_info.get("PubDate", {})
+            year = pub_date.get("Year", "Unknown Year")
+
+            # Extract author names properly
+            if isinstance(authors, list):
+                author_names = [
+                    f"{author.get('ForeName', '')} {author.get('LastName', '')}".strip()
+                    for author in authors
+                    if isinstance(author, dict)
+                ]
+            else:
+                author_names = []
+
+            # Format citation key
+            if author_names:
+                first_author = author_names[0]
+                citation_key = (
+                    f"[PMID: {pmid}, {first_author} et al., {year}]"
                 )
-                title = result.payload.get("title", "Unknown Title")
-                authors = result.payload.get("authors", [])
-                pmid = result.payload.get("pmid", "No PMID")
+            else:
+                citation_key = f"[PMID: {pmid}, {title}, {year}]"
 
-                # Extract year safely from journal
-                journal_info = result.payload.get("journal", {})
-                pub_date = journal_info.get("PubDate", {})
-                year = pub_date.get("Year", "Unknown Year")
-
-                # Extract author names properly
-                if isinstance(authors, list):
-                    author_names = [
-                        f"{author.get('ForeName', '')} {author.get('LastName', '')}".strip()
-                        for author in authors
-                        if isinstance(author, dict)
-                    ]
-                else:
-                    author_names = []
-
-                # Format citation key
-                if author_names:
-                    first_author = author_names[0]
-                    citation_key = (
-                        f"[PMID: {pmid}, {first_author} et al., {year}]"
-                    )
-                else:
-                    citation_key = f"[PMID: {pmid}, {title}, {year}]"
-
-                # Store citation details, replacing DOI with PMID
-                citations[citation_key] = {
-                    "title": title,
-                    "authors": ", ".join(author_names)
-                    if author_names
-                    else "Unknown Authors",
-                    "year": year,
-                    "pmid": pmid,  # Replacing DOI with PMID
-                }
+            # Store citation details, replacing DOI with PMID
+            citations[citation_key] = {
+                "title": title,
+                "authors": ", ".join(author_names)
+                if author_names
+                else "Unknown Authors",
+                "year": year,
+                "pmid": pmid,  # Replacing DOI with PMID
+            }
 
                 # Append abstract with citation marker
-                abstracts_with_citations.append(f"{abstract} {citation_key}")
+            abstracts_with_citations.append(f"{abstract} {citation_key}")
 
         combined_abstracts = " ".join(abstracts_with_citations)
 
