@@ -94,7 +94,10 @@ class PubMedSearcher:
                 )
             )
             previous_limit = limit
-            limit = math.ceil(limit * top_n / len(search_results))
+            if len(search_results) > 0:
+                limit = math.ceil(limit * top_n / len(search_results))
+            else:
+                limit = math.ceil(limit * 2)
 
         # limit search results to the correct number if we overshot
         search_results = search_results[:top_n]
