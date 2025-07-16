@@ -67,12 +67,11 @@ class PubMedSearcher:
     ) -> tuple[str, dict[str, dict]]:
         logging.info("Searching Qdrant for similar abstracts.")
 
-        search_factor = (
-            10  # start at ratio of sentence embeddings to regular embeddings
-        )
         search_results = []
         previous_limit = 0
-        limit = top_n * search_factor
+        limit = (
+            top_n * 10
+        )  # start at rough ratio of sentence embeddings to regular embeddings
         while len(search_results) < top_n:
             all_search_results = self.qdrant_client.search(
                 collection_name=self.qdrant_collection_name,
@@ -96,6 +95,9 @@ class PubMedSearcher:
             )
             previous_limit = limit
             limit = math.ceil(limit * top_n / len(search_results))
+
+        # limit search results to the correct number if we overshot
+        search_results = search_results[:top_n]
 
         abstracts_with_citations = []
         citations = {}
