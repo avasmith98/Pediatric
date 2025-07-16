@@ -1,6 +1,8 @@
 import logging
+import math
 import os
 import re
+
 import numpy as np
 import ollama
 import tqdm
@@ -18,6 +20,7 @@ logging.basicConfig(
         logging.StreamHandler(),
     ],
 )
+
 
 class PubMedSearcher:
     def __init__(
@@ -56,7 +59,7 @@ class PubMedSearcher:
 
         response = ollama.embeddings(model=self.embedding_model, prompt=query)
         embedding = np.asarray(response["embedding"])
-        embedding = embedding/np.linalg.norm(embedding)
+        embedding = embedding / np.linalg.norm(embedding)
         return embedding
 
     def search_qdrant(
@@ -64,24 +67,41 @@ class PubMedSearcher:
     ) -> tuple[str, dict[str, dict]]:
         logging.info("Searching Qdrant for similar abstracts.")
 
-        search_results = self.qdrant_client.search(
-            collection_name=self.qdrant_collection_name,
-            query_vector=NamedVector(
-                # should end up with the same bgem3_embedding name
-                name=f"{re.sub(self.not_alphanumeric, '', self.embedding_model)}_embedding",
-                vector=embedding.tolist(),
-            ),
-            limit=top_n,
-            with_payload=True,
+        search_factor = (
+            10  # start at ratio of sentence embeddings to regular embeddings
         )
+        search_results = []
+        previous_limit = 0
+        limit = top_n * search_factor
+        while len(search_results) < top_n:
+            all_search_results = self.qdrant_client.search(
+                collection_name=self.qdrant_collection_name,
+                query_vector=NamedVector(
+                    # should end up with the same bgem3_embedding name
+                    name=f"{re.sub(self.not_alphanumeric, '', self.embedding_model)}_embedding",
+                    vector=embedding.tolist(),
+                ),
+                limit=limit,
+                with_payload=True,
+            )
+
+            search_results.extend(
+                list(
+                    filter(
+                        lambda x: x.payload.get("type", None)
+                        != "sentence_embedding",
+                        all_search_results[previous_limit:],
+                    )
+                )
+            )
+            previous_limit = limit
+            limit = math.ceil(limit * top_n / len(search_results))
 
         abstracts_with_citations = []
         citations = {}
 
         for result in search_results:
-            abstract = result.payload.get(
-                "abstract", "No abstract available"
-            )
+            abstract = result.payload.get("abstract", "No abstract available")
             title = result.payload.get("title", "Unknown Title")
             authors = result.payload.get("authors", [])
             pmid = result.payload.get("pmid", "No PMID")
@@ -104,9 +124,7 @@ class PubMedSearcher:
             # Format citation key
             if author_names:
                 first_author = author_names[0]
-                citation_key = (
-                    f"[PMID: {pmid}, {first_author} et al., {year}]"
-                )
+                citation_key = f"[PMID: {pmid}, {first_author} et al., {year}]"
             else:
                 citation_key = f"[PMID: {pmid}, {title}, {year}]"
 
@@ -120,7 +138,7 @@ class PubMedSearcher:
                 "pmid": pmid,  # Replacing DOI with PMID
             }
 
-                # Append abstract with citation marker
+            # Append abstract with citation marker
             abstracts_with_citations.append(f"{abstract} {citation_key}")
 
         combined_abstracts = " ".join(abstracts_with_citations)
@@ -198,7 +216,7 @@ if __name__ == "__main__":
     for drug in tqdm.tqdm(drugs):
         output = {"name": drug}
         database_query = f"safety of {drug} used in children"
-        llm_query = f"Using the abstracts you have, determine if {drug} is safe for use in children. Your answer should be evidence based and only represent what you can find in the abstracts. Safe for use in children means that a targeted study has been done about safety in children and that the study affirms its safety. Do not extrapolate safety in the general population or adults to mean safe in children. You should summarize the relevant abstracts into an answer. Do not use your own knowledge to make educated guesses. Not safe for use in children means the opposite: a targeted study has been done about safety in children, and that study shows {drug} is unsafe. If there is no data to definitively prove safe or unsafe, then that means the safety is unknown.\nWhen citing, include in-text citations using the format [PMID: PMID, Author et al., Year] or [PMID: PMID, Title, Year] if the author is unknown.\nUse '<explain>' and '</explain>' tags around your explanation. If none of the abstracts you have are about {drug}, then your final answer in tags should be 'Not Available.' Make sure your final answer matches your explanation."
+        llm_query = f"Using the abstracts you have, explain why {drug} is safe or unsafe for use in children. Your explanation should be evidence based and only represent what you can find in the abstracts. Safe for use in children means that a targeted study has been done about safety in children and that the study affirms its safety. Do not extrapolate safety in the general population or adults to mean safe in children. You should summarize the relevant abstracts into an explanation. Do not use your own knowledge to make educated guesses. Not safe for use in children means the opposite: a targeted study has been done about safety in children, and that study shows {drug} is unsafe. If there is no data to definitively prove safe or unsafe, then that means the safety is unknown.\nWhen citing, include in-text citations using the format [PMID: PMID, Author et al., Year] or [PMID: PMID, Title, Year] if the author is unknown.\nIf none of the abstracts you have are about {drug}, then your explanation should reflect that not enough data was available to you."
         output["abstracts"], output["citations"], output["answer"] = (
             searcher.search(
                 database_query,
