@@ -196,7 +196,7 @@ if __name__ == "__main__":
     from dotenv import load_dotenv
 
     # Qdrant client setup
-    qdrant_client = QdrantClient(host="localhost", port=6333)
+    qdrant_client = QdrantClient(host="localhost", port=6333, timeout = 300.0)
     collection_name = "PubMed"
 
     # OpenAI client setup
