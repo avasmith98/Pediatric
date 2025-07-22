@@ -177,7 +177,7 @@ class PubMedSearcher:
         ]
 
         completion = self.openai_client.chat.completions.create(
-            model=model, messages=messages
+            model=model, messages=messages, temperature = 0
         )
         answer = completion.choices[0].message.content
 
@@ -221,7 +221,15 @@ if __name__ == "__main__":
     for drug in tqdm.tqdm(drugs):
         output = {"name": drug}
         database_query = f"safety of {drug} used in children"
-        llm_query = f"Using the abstracts you have, explain why {drug} is safe or unsafe for use in children. Your explanation should be evidence based and only represent what you can find in the abstracts. Safe for use in children means that a targeted study has been done about safety in children and that the study affirms its safety. Do not extrapolate safety in the general population or adults to mean safe in children. You should evaluate each abstract individually and summarize the relevant abstracts into an explanation using specific age ranges. Do not use your own knowledge to make educated guesses. Not safe for use in children means the opposite: a targeted study has been done about safety in children, and that study shows {drug} is unsafe. If there is no data to definitively prove safe or unsafe, then that means the safety is unknown.\nWhen citing, include in-text citations using the format [PMID: PMID, Author et al., Year] or [PMID: PMID, Title, Year] if the author is unknown.\nIf none of the abstracts you have are about {drug}, then your explanation should reflect that not enough data was available to you."
+        llm_query = f"""Using the abstracts you have, explain why {drug} is safe or unsafe for use in children, specifying exact age ranges studied. 
+        Your explanation should be evidence based and only represent what you can find in the abstracts. 
+        Safe for use in children means that a targeted study has been done about safety in children and that the study affirms its safety.
+        Do not extrapolate safety in the general population or adults to mean safe in children. 
+        You should evaluate each abstract individually and summarize the relevant abstracts into an explanation using specific age ranges. 
+        Do not use your own knowledge to make educated guesses. Not safe for use in children means the opposite: a targeted study has been done about safety in children, and that study shows {drug} is unsafe. 
+        If there is no data to definitively prove safe or unsafe, then that means the safety is unknown.
+        \nWhen citing, include in-text citations using the format [PMID: PMID, Author et al., Year] or [PMID: PMID, Title, Year] if the author is unknown.
+        \nIf none of the abstracts you have are about {drug}, then your explanation should reflect that not enough data was available to you."""
         output["abstracts"], output["citations"], output["answer"] = (
             searcher.search(
                 database_query,
