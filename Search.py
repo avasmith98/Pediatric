@@ -235,8 +235,8 @@ if __name__ == "__main__":
                 database_query,
                 llm_query,
                 llm_model="gpt-4.1",
-                save=False,
-                show=True,
+                save=True,
+                show=False,
             )
         )
         json_output.append(output)
