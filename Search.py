@@ -45,7 +45,7 @@ class PubMedSearcher:
         llm_model: str = "gpt-4.1",
         *,
         save: bool = True,
-        show: bool = False,
+        show: bool = True,
     ) -> tuple[str, dict[str, dict], str]:
         embeddings = self.generate_embedding(database_query)
         abstracts, citations = self.search_qdrant(embeddings, top_n, save)
@@ -236,7 +236,7 @@ if __name__ == "__main__":
                 database_query,
                 llm_query,
                 llm_model="gpt-4.1",
-                save=True,
+                save=False,
                 show=False,
             )
         )
