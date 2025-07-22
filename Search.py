@@ -236,7 +236,7 @@ if __name__ == "__main__":
                 database_query,
                 llm_query,
                 llm_model="gpt-4.1",
-                save=False,
+                save=True,
                 show=False,
             )
         )
