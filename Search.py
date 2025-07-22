@@ -116,7 +116,7 @@ class PubMedSearcher:
             pub_date = journal_info.get("PubDate", {})
             year = pub_date.get("Year", "Unknown Year")
 
-            # Extract author names properly
+            # Extract author names 
             if isinstance(authors, list):
                 author_names = [
                     f"{author.get('ForeName', '')} {author.get('LastName', '')}".strip()
@@ -133,14 +133,14 @@ class PubMedSearcher:
             else:
                 citation_key = f"[PMID: {pmid}, {title}, {year}]"
 
-            # Store citation details, replacing DOI with PMID
+            # Store citation details
             citations[citation_key] = {
                 "title": title,
                 "authors": ", ".join(author_names)
                 if author_names
                 else "Unknown Authors",
                 "year": year,
-                "pmid": pmid,  # Replacing DOI with PMID
+                "pmid": pmid,  
             }
 
             # Append abstract with citation marker
@@ -221,14 +221,14 @@ if __name__ == "__main__":
     for drug in tqdm.tqdm(drugs):
         output = {"name": drug}
         database_query = f"safety of {drug} used in children"
-        llm_query = f"Using the abstracts you have, explain why {drug} is safe or unsafe for use in children. Your explanation should be evidence based and only represent what you can find in the abstracts. Safe for use in children means that a targeted study has been done about safety in children and that the study affirms its safety. Do not extrapolate safety in the general population or adults to mean safe in children. You should summarize the relevant abstracts into an explanation. Do not use your own knowledge to make educated guesses. Not safe for use in children means the opposite: a targeted study has been done about safety in children, and that study shows {drug} is unsafe. If there is no data to definitively prove safe or unsafe, then that means the safety is unknown.\nWhen citing, include in-text citations using the format [PMID: PMID, Author et al., Year] or [PMID: PMID, Title, Year] if the author is unknown.\nIf none of the abstracts you have are about {drug}, then your explanation should reflect that not enough data was available to you."
+        llm_query = f"Using the abstracts you have, explain why {drug} is safe or unsafe for use in children. Your explanation should be evidence based and only represent what you can find in the abstracts. Safe for use in children means that a targeted study has been done about safety in children and that the study affirms its safety. Do not extrapolate safety in the general population or adults to mean safe in children. You should evaluate each abstract individually and summarize the relevant abstracts into an explanation using specific age ranges. Do not use your own knowledge to make educated guesses. Not safe for use in children means the opposite: a targeted study has been done about safety in children, and that study shows {drug} is unsafe. If there is no data to definitively prove safe or unsafe, then that means the safety is unknown.\nWhen citing, include in-text citations using the format [PMID: PMID, Author et al., Year] or [PMID: PMID, Title, Year] if the author is unknown.\nIf none of the abstracts you have are about {drug}, then your explanation should reflect that not enough data was available to you."
         output["abstracts"], output["citations"], output["answer"] = (
             searcher.search(
                 database_query,
                 llm_query,
                 llm_model="gpt-4.1",
                 save=False,
-                show=False,
+                show=True,
             )
         )
         json_output.append(output)
