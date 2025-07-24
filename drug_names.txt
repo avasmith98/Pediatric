@@ -1,100 +1,100 @@
 Clindamycin Phosphate
-Fabior
+Tazarotene
 Halobetasol Propionate
-Advair HFA
-Asmanex HFA
-Epifoam
+Fluticasone Propionate And Salmeterol Xinafoate
+Mometasone Furoate
+Hydrocortisone Acetate And Pramoxine Hydrochloride
 Erythromycin
 Omeprazole
-Bafiertam
+Monomethyl Fumarate
 Dimethyl Fumarate
-Mycapssa
-Talicia
-Aspirin and Dipyridamole
-Effexor XR
+Octreotide Acetate
+Amoxicillin And Omeprazole Magnesium And Rifabutin
+Aspirin And Dipyridamole
+Venlafaxine Hydrochloride
 Trospium Chloride
-Verelan
-Bylvay
+Verapamil Hydrochloride
+Odevixibat
 Acyclovir
-Altace
+Ramipril
 Alvimopan
 Cevimeline Hydrochloride
-Crenessity
-Cuprimine
+Crinecerfont
+Penicillamine
 Cyclophosphamide
-Dibenzyline
+Phenoxybenzamine Hydrochloride
 Diclofenac Potassium
 Doxepin Hydrochloride
-Dyrenium
+Triamterene
 Etoposide
 Fenoprofen Calcium
-Ingrezza
+Valbenazine Tosylate
 Itraconazole
-Linzess
-Litfulo
-Lyrica
+Linaclotide
+Ritlecitinib Tosylate
+Pregabalin
 Miglustat
-Mycobutin
-Ninlaro
+Rifabutin
+Ixazomib Citrate
 Oxycodone Hydrochloride
 Phentermine Hydrochloride
-Retevmo
+Selpercatinib
 Selegiline Hydrochloride
 Tolmetin Sodium
-Turalio
-Vitrakvi
-Vyndaqel
-Xenical
-Xolremdi
+Pexidartinib Hydrochloride
+Larotrectinib Sulfate
+Tafamidis Meglumine
+Orlistat
+Mavorixafor
 Zaleplon
 Sertraline Hydrochloride
-Elimite
-Luzu
-Nystatin and Triamcinolone Acetonide
+Permethrin
+Luliconazole
+Nystatin And Triamcinolone Acetonide
 Trihexyphenidyl Hydrochloride
-Cleviprex
+Clevidipine
 Difluprednate
-Belbuca
+Buprenorphine Hydrochloride
 Clindamycin Palmitate Hydrochloride
-Sabril
+Vigabatrin
 Pantoprazole Sodium
 Colesevelam Hydrochloride
 Famotidine
-Vfend
-Xarelto
-Xofluza
-Cabtreo
+Voriconazole
+Rivaroxaban
+Baloxavir Marboxil
+Adapalene And Benzoyl Peroxide And Clindamycin Phosphate
 Ciclopirox
-Panretin
-iDose TR
+Alitretinoin
+Travoprost
 Azathioprine Sodium
 Bupivacaine Hydrochloride
 Busulfan
 Butorphanol Tartrate
-Cardiolite
-Ceftriaxone
+Technetium Tc-99M Sestamibi Kit
+Ceftriaxone Sodium
 Cefuroxime Sodium
 Chloroprocaine Hydrochloride
 Cisatracurium Besylate
 Clonidine Hydrochloride
 Colistimethate Sodium
-Cortrosyn
-Cyklokapron
+Cosyntropin
+Tranexamic Acid
 Daunorubicin Hydrochloride
-Depo-Medrol
+Methylprednisolone Acetate
 Dopamine Hydrochloride
 Erythromycin Lactobionate
 Fomepizole
 Gadoteridol
 Glycopyrrolate
 Granisetron Hydrochloride
-Ifex
+Ifosfamide
 Isoproterenol Hydrochloride
-Levophed
+Norepinephrine Bitartrate
 Methylergonovine Maleate
-Octreoscan
+Indium In-111 Pentetreotide Kit
 Pyridoxine Hydrochloride
 Terbutaline Sulfate
 Zinc Chloride
-Arranon
-Reclast
+Nelarabine
+Zoledronic Acid
