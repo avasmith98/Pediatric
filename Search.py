@@ -221,7 +221,7 @@ if __name__ == "__main__":
     for drug in tqdm.tqdm(drugs):
         output = {"name": drug}
         database_query = f"safety of {drug} used in children"
-        llm_query = f"""Using the abstracts you have, determine if {drug} is safe for use in chidlren. 
+        llm_query = f"""Using the abstracts you have, determine if {drug} is safe for use in children. 
         Your explanation should be evidence based and only represent what you can find in the abstracts. 
         Safe for use in children means that a targeted study has been done about safety in children and that the study affirms its safety.
         Do not extrapolate safety in the general population or adults to mean safe in children. 
